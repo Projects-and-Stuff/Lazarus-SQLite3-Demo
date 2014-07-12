@@ -1,0 +1,102 @@
+object Form1: TForm1
+  Left = 389
+  Height = 240
+  Top = 156
+  Width = 366
+  Caption = 'Form1'
+  ClientHeight = 240
+  ClientWidth = 366
+  LCLVersion = '1.2.4.0'
+  object Button1: TButton
+    Left = 144
+    Height = 25
+    Top = 64
+    Width = 75
+    Caption = 'Make New'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object txtNew: TEdit
+    Left = 144
+    Height = 23
+    Top = 160
+    Width = 120
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 144
+    Height = 25
+    Top = 198
+    Width = 75
+    Caption = 'ReKey'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object txtOld: TEdit
+    Left = 144
+    Height = 23
+    Top = 136
+    Width = 120
+    TabOrder = 3
+  end
+  object Label1: TLabel
+    Left = 80
+    Height = 15
+    Top = 144
+    Width = 48
+    Caption = 'Old Pass:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 80
+    Height = 15
+    Top = 168
+    Width = 53
+    Caption = 'New Pass:'
+    ParentColor = False
+  end
+  object txtPass: TEdit
+    Left = 144
+    Height = 23
+    Top = 32
+    Width = 120
+    TabOrder = 4
+  end
+  object Label3: TLabel
+    Left = 80
+    Height = 15
+    Top = 40
+    Width = 48
+    Caption = 'Old Pass:'
+    ParentColor = False
+  end
+  object DataSource1: TDataSource
+    DataSet = SQLQuery1
+    left = 24
+    top = 5
+  end
+  object SQLQuery1: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    Params = <>
+    left = 96
+    top = 5
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = False
+    Database = SQLite3Connection1
+    left = 176
+    top = 5
+  end
+  object SQLite3Connection1: TSQLite3Connection
+    Connected = False
+    LoginPrompt = False
+    KeepConnection = False
+    Transaction = SQLTransaction1
+    LogEvents = []
+    Options = []
+    left = 280
+    top = 5
+  end
+end
