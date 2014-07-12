@@ -78,13 +78,16 @@ http://www.sqlite.org/pragma.html#pragma_schema_version
 
 In the demo application, I've set the user_version to a constant value.
 You can use any 32-bit Signed Integer value you want:
+
     // must be a 32-bit Signed Integer (LongInt -2147483648 .. 2147483647)
     user_version = 23400001;
 
 When we create the database, we set this value to the database:
+
     SQLite3Connection1.ExecuteDirect('PRAGMA user_version = ' + IntToStr(user_version) + ';');
 
 To read the user_version from the database, we can do the following:
+
     SQLQuery1.SQL.Text := 'PRAGMA user_version;';
     SQLQuery1.Open;
     ShowMessage(SQLQuery1.fields[0].asString);
@@ -97,13 +100,16 @@ http://www.sqlite.org/pragma.html#pragma_application_id
 
 In the demo application, I've set the application_id to a constant value.
 You can use any 32-bit Unsigned Integer value you want. In one of my applications I use this value to track differences in the database table structure between different versions of my application, incrementing the application_id each time I change the table structure with a new application version:
+
     // must be a 32-bit Unsigned Integer (Longword 0 .. 4294967295)
     application_id = 1189021115; 
 
 When we create the database, we set this value to the database:
+
     SQLite3Connection1.ExecuteDirect('PRAGMA application_id = ' + IntToStr(application_id) + ';');
 
 To read the application_id from the database, we can do the following:
+
     SQLQuery1.SQL.Text := 'PRAGMA application_id;';
     SQLQuery1.Open;
     ShowMessage(SQLQuery1.fields[0].asString);
@@ -111,17 +117,21 @@ To read the application_id from the database, we can do the following:
 
 
 The key pragma is a little different. Using Lazarus' SQLiteConnection Component, we set the key with the 'password' parameter.
+
     SQLite3Connection1.Password := txtOld.Text;
 
 We could also use a Pragma statement to set the key initially using the following when we create the database:
+
     SQLite3Connection1.ExecuteDirect('PRAGMA key = ' + QuotedStr(txtNew.Text) + ';');
 
 The benefit of using the password parameter of the SQLiteConnection component is that it sets the key and if we want to use open and close the database multiple times while using the application, we don't have to keep specifying a key.
 
 If you do not want to encrypt the database initially, simply do not provide an encryption key/password, or leave these values blank:
+
     SQLite3Connection1.Password := '';
 
 In order to change the encryption or to remove all encryption (unencrypting the database) after the database has been created, we use the 'rekey' Pragma as follows:
+
     SQLite3Connection1.ExecuteDirect('PRAGMA rekey = ' + QuotedStr(txtNew.Text) + ';');
 
 The double-quotes used here allow the user to leave txtNew empty, which sets the resulting SQL Statement to:
