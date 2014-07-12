@@ -6,16 +6,16 @@
 
     CONTENTS                                    
 
-    1. OVERVIEW OF THIS DEMONSTRATION           
-    2. REQUIREMENTS FOR SQLITE ENCRYPTION       
-    3. SQLITE PRAGMA STATEMENTS                 
-    4. ADDITIONAL SQLITE RESOURCES              
+    1) OVERVIEW OF THIS DEMONSTRATION           
+    2) REQUIREMENTS FOR SQLITE ENCRYPTION       
+    3) SQLITE PRAGMA STATEMENTS                 
+    4) ADDITIONAL SQLITE RESOURCES              
 
 
 
+---
 
-
-1. OVERVIEW OF THIS DEMONSTRATION
+#### 1) OVERVIEW OF THIS DEMONSTRATION
 
 This application very simply demonstrates the following capabilities:
 - Creation of an SQLite3 Database
@@ -32,10 +32,9 @@ The application makes a new database file "new.db" within the local directory.
 I highly recommend using a third party SQLite Database Management Tool to verify the table and index creation and encryption of your database. You'll want to use one that supports SQLite 3.6.8 or later. I use SQLite2009 Pro Enterprise Manager. This and other tools can be found at:
 http://www.sqlite.org/cvstrac/wiki?p=ManagementTools
 
+---
 
-
-
-2. REQUIREMENTS FOR SQLITE ENCRYPTION
+#### 2) REQUIREMENTS FOR SQLITE ENCRYPTION
 
 Since version 3.6.8 SQLite has supported the option of database encryption (though it must be supported specifically by the version of the sqlite3.dll you use for your application). The entire database, except for bytes 16 through 23, will be encrypted. See the additional resources at the end of this document for more details about the SQLite Database Header, and these specific bytes.
 
@@ -49,19 +48,15 @@ When selecting the DLL to use, if you have the latest version of the .NET framew
 http://system.data.sqlite.org/downloads/1.0.93.0/sqlite-netFx451-binary-x64-2013-1.0.93.0.zip
 Just extract the SQLite.Interop.dll and rename it to sqlite3.dll and place it in the local directory. Again, you'll want to download a version that matches the version of .NET and Visual C++ Runtime on your computer (you may have many/all the versions of .NET and VC++ Redists installed).
 
-You can download various versions of the .NET framework at:
-http://msdn.microsoft.com/en-us/vstudio/aa496123.aspx
-
-You can download various versions of the Visual C++ Redistributables at:
-http://support.microsoft.com/kb/2019667
+- You can download various versions of the .NET framework at: http://msdn.microsoft.com/en-us/vstudio/aa496123.aspx
+- You can download various versions of the Visual C++ Redistributables at: http://support.microsoft.com/kb/2019667
 
 
 Make sure the sqlite3.dll is in the same directory as your application, or you *will* have errors, and your application will not work!
 
+---
 
-
-
-3. SQLITE PRAGMA STATEMENTS
+#### 3) SQLITE PRAGMA STATEMENTS
 
 SQLite Pragma are metadata variables and constants that are stored in the header of an SQLite Database. Most of these values are read-only or are not recommended to be changed, but a few of them can be set for various purposes in your application.
 
@@ -70,10 +65,10 @@ This demonstration application performs a few different Pragma operations:
 - sets and reads the user_version Pragma
 - sets and re-sets the encryption key
 
-
+---
 
 Per the SQLite Documentation (edited for clarity):
-The pragma user_version is used to set or get the value of the user-version. The user-version is a big-endian 32-bit signed integer stored in the database header at offset 60. The user-version is not used internally by SQLite. It may be used by applications for any purpose.
+The **user_version Pragma** is used to set or get the value of the user-version. The user-version is a big-endian 32-bit signed integer stored in the database header at offset 60. The user-version is not used internally by SQLite. It may be used by applications for any purpose.
 http://www.sqlite.org/pragma.html#pragma_schema_version
 
 In the demo application, I've set the user_version to a constant value.
@@ -92,10 +87,10 @@ To read the user_version from the database, we can do the following:
     SQLQuery1.Open;
     ShowMessage(SQLQuery1.fields[0].asString);
 
-
+---
 
 Per the SQLite Documentation:
-The application_id PRAGMA is used to query or set the 32-bit unsigned big-endian "Application ID" integer located at offset 68 into the database header. Applications that use SQLite as their application file-format should set the Application ID integer to a unique integer so that utilities such as file(1) can determine the specific file type rather than just reporting "SQLite3 Database". A list of assigned application IDs can be seen by consulting the magic.txt file in the SQLite source repository. 
+The **application_id Pragma** is used to query or set the 32-bit unsigned big-endian "Application ID" integer located at offset 68 into the database header. Applications that use SQLite as their application file-format should set the Application ID integer to a unique integer so that utilities such as file(1) can determine the specific file type rather than just reporting "SQLite3 Database". A list of assigned application IDs can be seen by consulting the magic.txt file in the SQLite source repository. 
 http://www.sqlite.org/pragma.html#pragma_application_id
 
 In the demo application, I've set the application_id to a constant value.
@@ -114,9 +109,9 @@ To read the application_id from the database, we can do the following:
     SQLQuery1.Open;
     ShowMessage(SQLQuery1.fields[0].asString);
 
+---
 
-
-The key pragma is a little different. Using Lazarus' SQLiteConnection Component, we set the key with the 'password' parameter.
+The **key Pragma** is a little different. Using Lazarus' SQLiteConnection Component, we set the key with the 'password' parameter.
 
     SQLite3Connection1.Password := txtOld.Text;
 
@@ -139,10 +134,9 @@ PRAGMA rekey = '';
 
 Which removes all encryption (unencrypts the database).
 
+---
 
-
-
-4. ADDITIONAL SQLITE RESOURCES
+#### 4.) ADDITIONAL SQLITE RESOURCES
 
 To read more about the SQLite Encryption Extension (SEE), use the following URL (Section: How To Compile And Use SEE)
 http://www.sqlite.org/see/doc/trunk/www/index.wiki
