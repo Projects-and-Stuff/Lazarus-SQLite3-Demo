@@ -39,37 +39,9 @@ unit Unit1;
 // - Change (or set if not initially set) the encryption key for the database
 
 // The application makes a new database file "new.db" within the local directory
+// See readme.txt for installation instructions and details
 
 
-
-// Using the following link, you can find a few options for versions
-// of SQLite that provide support for encryption. Since I'm working
-// mainly on Windows, I opted for the Open Source System.Data.SQLite
-// http://wiki.freepascal.org/sqlite#Support_for_SQLite_encryption
-
-// I used the "Precompiled Binaries for 32-bit Windows (.NET Framework 3.5 SP1)"
-// and renamed SQLite.Interop.dll to sqlite3.dll, but you should be able to
-// use any version you want as long as you have the required dependancies.
-// http://system.data.sqlite.org/index.html/doc/trunk/www/downloads.wiki
-
-// Make sure the sqlite3.dll is in the same directory as your application, or you
-// *will* have errors, and your application will not work.
-
-
-
-// MORE HELPFUL SQLITE INFO
-
-// To read more about the SQLite Encryption Extension (SEE),
-// use the following URL (Section: How To Compile And Use SEE)
-// http://www.sqlite.org/see/doc/trunk/www/index.wiki
-
-// Details about the SQLite File Format (and particularly about
-// the Database Header) can be found at:
-// http://www.sqlite.org/fileformat2.html#database_header
-
-// Information about the various database PRAGMA (metadata) statements
-// can be found at:
-// http://www.sqlite.org/pragma.html
 
 
 {$mode objfpc}{$H+}
@@ -177,7 +149,7 @@ begin
       // Make the database and the tables
       try
         SQLite3Connection1.Open;
-        SQLTransaction1.Active := True;
+        SQLTransaction1.Active := true;
 
 
         // Per the SQLite Documentation (edited for clarity):
@@ -214,6 +186,8 @@ begin
 
         SQLTransaction1.Commit;
 
+        ShowMessage('Succesfully created database.');
+
       except
         ShowMessage('Unable to Create new Database');
       end;
@@ -228,9 +202,6 @@ end;
 
 procedure TForm1.btnAddToDBClick(Sender: TObject);
 begin
-
-  SQLite3Connection1.Close; // Ensure the connection is closed when we start
-
   SQLite3Connection1.Password := txtPass.Text; // The current password
 
   if (txtUser_Name.Text = '') OR (txtInfo.Text = '') then
@@ -255,16 +226,13 @@ begin
       SQLQuery1.ExecSQL;
 
       SQLTransaction1.Commit;
-      SQLTransaction1.Active := False;
-      SQLite3Connection1.Close;
-
-      // Update the SQLite3Connection with the new password for future database transactions
-      SQLite3Connection1.Password := txtNew.Text;
 
       // Clear Edit boxes
       txtUser_Name.Text := '';
       txtInfo.Text := '';
 
+      // Now let's update the grid to show the new values to the user:
+      btnUpdateGridClick(nil);
     except
       ShowMessage('Unable to add User_Name: ' + txtUser_Name.Text + ' and Info: ' + txtInfo.Text + ' to the database. Ensure database exists and password is correct.');
     end;
@@ -296,16 +264,21 @@ begin
     // Note that the hexkey, rekey and hexrekey pragmas only work with SQLite version 3.6.8 and later.
     // http://www.sqlite.org/see/doc/trunk/www/readme.wiki
     // Section: Using the "key" PRAGMA
-    SQLite3Connection1.ExecuteDirect('PRAGMA rekey = "' + txtNew.Text + '";');
+    SQLite3Connection1.ExecuteDirect('PRAGMA rekey = ' + QuotedStr(txtNew.Text) + ';');
 
 
     SQLTransaction1.Commit;
-    SQLTransaction1.Active := False;
     SQLite3Connection1.Close;
 
     // Transfer the password to txtPass and erase txtNew
     txtPass.Text := txtNew.Text;
     txtNew.Text := '';
+
+    // ... and make sure we remember the new password in our sqlconnection ready
+    // for reconnecting
+    SQLite3Connection1.Password := txtPass.Text;
+
+    ShowMessage('Password rekey succesful.');
 
   except
     ShowMessage('Unable to set the new key using: PRAGMA rekey = ' + txtNew.Text + ';');
@@ -331,8 +304,9 @@ begin
 
 
     SQLTransaction1.Commit;
-    SQLTransaction1.Active := False;
     SQLite3Connection1.Close;
+
+    ShowMessage('SetAppID succesful');
 
   except
     ShowMessage('Unable to set new application_id: ' + txtApplication_ID.Text + ';');
@@ -358,8 +332,9 @@ begin
 
 
     SQLTransaction1.Commit;
-    SQLTransaction1.Active := False;
     SQLite3Connection1.Close;
+
+    ShowMessage('SetUserVersion succesful.');
 
   except
     ShowMessage('Unable to set user_version: ' + txtUser_Version.Text + ';');
@@ -382,7 +357,7 @@ begin
     SQLQuery1.Open;
 
     // Display the resulting value
-    ShowMessage(SQLQuery1.fields[0].asString);
+    ShowMessage('application_id is: '+SQLQuery1.fields[0].asString);
 
   except
     ShowMessage('Unable to display application_id');
@@ -405,7 +380,7 @@ begin
     SQLQuery1.Open;
 
     // Display the resulting value
-    ShowMessage(SQLQuery1.fields[0].asString);
+    ShowMessage('user_version is: '+SQLQuery1.fields[0].asString);
 
   except
     ShowMessage('Unable to display user_version');
@@ -415,8 +390,6 @@ end;
 
 procedure TForm1.btnUpdateGridClick(Sender: TObject);
 begin
-
-  SQLite3Connection1.Close; // Ensure the connection is closed when we start
 
   SQLite3Connection1.Password := txtPass.Text; // The current password
 

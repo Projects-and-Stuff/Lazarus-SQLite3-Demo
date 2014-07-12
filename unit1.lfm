@@ -291,22 +291,22 @@ object Form1: TForm1
   end
   object DataSource1: TDataSource
     DataSet = SQLQuery1
-    left = 24
-    top = 5
+    left = 376
+    top = 8
   end
   object SQLQuery1: TSQLQuery
     FieldDefs = <>
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
     Params = <>
-    left = 24
-    top = 64
+    left = 376
+    top = 72
   end
   object SQLTransaction1: TSQLTransaction
     Active = False
     Database = SQLite3Connection1
-    left = 24
-    top = 120
+    left = 376
+    top = 144
   end
   object SQLite3Connection1: TSQLite3Connection
     Connected = False
@@ -315,7 +315,7 @@ object Form1: TForm1
     Transaction = SQLTransaction1
     LogEvents = []
     Options = []
-    left = 24
-    top = 176
+    left = 376
+    top = 200
   end
 end

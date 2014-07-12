@@ -18,15 +18,14 @@
 1. OVERVIEW OF THIS DEMONSTRATION
 
 This application very simply demonstrates the following capabilities:
-- Creation of a SQLite3 Database
+- Creation of an SQLite3 Database
 - Encrypting the database using a key
 - Changing (or setting if not initially set) the encryption key for the 
   database after it has been created
 - Creation of a database table
 - Creating an Index
 - Adding a row of data to the table
-- Performing a very basic query to pull all rows and display in a DBGrid
-- Performing a very basic query to count all rows
+- Performing a very basic query
 - Setting and reading various database metadata (Pragma)
 
 The application makes a new database file "new.db" within the local 
@@ -58,7 +57,7 @@ http://wiki.freepascal.org/sqlite#Support_for_SQLite_encryption
 I used the "Precompiled Binaries for 32-bit Windows (.NET Framework 3.5 SP1)" 
 and renamed SQLite.Interop.dll to sqlite3.dll, but you should be able to use 
 any version of applicable SQLite DLL you want as long as you have the 
-required dependancies (.NET Framework and VC++ Redistributables.
+required dependencies (.NET Framework and VC++ Redistributables.
 http://system.data.sqlite.org/index.html/doc/trunk/www/downloads.wiki
 
 When selecting the DLL to use, if you have the latest version of the .NET 
@@ -108,7 +107,7 @@ http://www.sqlite.org/pragma.html#pragma_schema_version
 In the demo application, I've set the user_version to a constant value.
 You can use any 32-bit Signed Integer value you want:
 // must be a 32-bit Signed Integer (LongInt -2147483648 .. 2147483647)
-  user_version = 23400001;  
+  user_version = 23400001;
 
 When we create the database, we set this value to the database:
   SQLite3Connection1.ExecuteDirect('PRAGMA user_version = ' + IntToStr(user_version) + ';');
@@ -132,7 +131,7 @@ http://www.sqlite.org/pragma.html#pragma_application_id
 
 In the demo application, I've set the application_id to a constant value.
 You can use any 32-bit Unsigned Integer value you want. In one of my applications
-I use this value to track differences in the databse table structure between
+I use this value to track differences in the database table structure between
 different versions of my application, incrementing the application_id each time I
 change the table structure with a new application version:
 // must be a 32-bit Unsigned Integer (Longword 0 .. 4294967295)
@@ -153,24 +152,24 @@ we set the key with the 'password' parameter.
   SQLite3Connection1.Password := txtOld.Text;
 
 We could also use a Pragma statement to set the key initially using the following 
-when we make the database:
-  SQLite3Connection1.ExecuteDirect('PRAGMA key = "' + txtNew.Text + '";');
+when we create the database:
+  SQLite3Connection1.ExecuteDirect('PRAGMA key = ' + QuotedStr(txtNew.Text) + ';');
 
 The benefit of using the password parameter of the SQLiteConnection component 
 is that it sets the key and if we want to use open and close the database 
 multiple times while using the application, we don't have to keep specifying a key.
 
 If you do not want to encrypt the database initially, simply do not provide an 
-encryption key/password, or leave these values blank
+encryption key/password, or leave these values blank:
   SQLite3Connection1.Password := '';
 
 In order to change the encryption or to remove all encryption (unencrypting the 
 database) after the database has been created, we use the 'rekey' Pragma as follows:
-  SQLite3Connection1.ExecuteDirect('PRAGMA rekey = "' + txtNew.Text + '";');
+  SQLite3Connection1.ExecuteDirect('PRAGMA rekey = ' + QuotedStr(txtNew.Text) + ';');
 
 The double-quotes used here allow the user to leave txtNew empty, which sets the 
 resulting SQL Statement to:
-PRAGMA rekey = "";
+PRAGMA rekey = '';
 
 Which removes all encryption (unencrypts the database).
 
